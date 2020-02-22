@@ -1,0 +1,6 @@
+[submodule "third_parties/polipo"]
+	path = third_parties/polipo
+	url = https://github.com/jech/polipo.git
+[submodule "third_parties/scrapyd-client"]
+	path = third_parties/scrapyd-client
+	url = https://github.com/scrapy/scrapyd-client.git
