@@ -4,3 +4,6 @@
 [submodule "third_parties/scrapyd-client"]
 	path = third_parties/scrapyd-client
 	url = https://github.com/scrapy/scrapyd-client.git
+[submodule "third_parties/scrapyd"]
+	path = third_parties/scrapyd
+	url = https://github.com/tungpd/scrapyd.git
