@@ -23,7 +23,7 @@ NEWSPIDER_MODULE = 'text_crawler.spiders'
 EXPORT_ROOT_DIR = '/home/tungpd/text_corpus/data'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'text_crawler'
+# USER_AGENT = 'text_crawler'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -40,7 +40,7 @@ DOWNLOAD_DELAY = 3
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -60,6 +60,11 @@ DOWNLOAD_DELAY = 3
 # More comprehensive list can be found at
 # http://techpatterns.com/forums/about304.html
 USER_AGENT_LIST = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246',
+    'Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9',
+    'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36',
+    'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1',
     'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.36 Safari/535.7',
     'Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0) Gecko/16.0 Firefox/16.0',
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.3 Safari/534.53.10'
@@ -68,6 +73,7 @@ USER_AGENT_LIST = [
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
+    'scrapy.spidermiddlewares.offsite.OffsiteMiddleware': 200,
     #'text_crawler.middlewares.MyCustomDownloaderMiddleware': 543,
     'text_crawler.middlewares.RandomUserAgentMiddleware': 400,
     'text_crawler.middlewares.ProxyMiddleware': 410,
@@ -78,10 +84,13 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
-#    'scrapy.extensions.telnet.TelnetConsole': None,
-#}
-
+EXTENSIONS = {
+    # 'text_crawler.extensions.my_ext.SpiderOpenCloseLogging': 100,
+    'scrapy.extensions.logstats.LogStats': None,
+    'text_crawler.extensions.logstats.LogStats': 500,
+}
+MYEXT_ENABLED = True
+MYEXT_ITEMCOUNT = 10
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {

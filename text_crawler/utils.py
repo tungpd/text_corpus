@@ -3,6 +3,8 @@ import leveldb
 from scrapy.spiders import CrawlSpider
 import logging
 
+from scrapy.linkextractors import LinkExtractor
+from scrapy.spiders import Rule
 import scrapy
 from text_crawler import settings
 from boilerpy3 import extractors
@@ -10,6 +12,7 @@ from text_crawler.items import Article
 import re
 import hashlib
 import time
+from random import randint
 
 class LevelDbSet(object):
 
@@ -50,22 +53,36 @@ class TextSpider(CrawlSpider):
     allowed_url_pattern = r''
     excluded_url_pattern = r''
     custom_settings = {
-        'DEPTH_LIMIT': 10
+        'DEPTH_LIMIT': 3
     }
-    sha256 = hashlib.sha256()
-
 
     def __init__(self):
         super(TextSpider, self).__init__()
         self.visited_urls = LevelDbSet(settings.VISITED_URLS_DB + "/" + self.name)
 
+    def process_links(self, links):
+        ret_links = []
+        for link in links:
+            url = link.url
+            url_h = hashlib.sha256(url.encode('utf8')).hexdigest().encode('utf8')
+            rd = randint(0, 100)
+            if url_h in self.visited_urls and rd < 90:
+                self.log("visitted url: %s, %s"%(url_h, url))
+                continue
+            if url_h not in self.visited_urls:
+                self.log("not visitted url: %s, %s"%(url_h, url))
+            else:
+                self.log("radom select visitted_url: %s, %s"%(url_h, url))
+            ret_links.append(link)
+        return ret_links
+
+
     def parse_article(self, response):
         url = response.url
-        self.sha256.update(url.encode('utf8'))
-        url_h = self.sha256.hexdigest().encode('utf8')
+        url_h = hashlib.sha256(url.encode('utf8')).hexdigest().encode('utf8')
         if url_h not in self.visited_urls:
             body = response.text
             extractor = extractors.ArticleExtractor()
             extracted_text = extractor.get_content(body)
-            self.visited_urls.add(url_h)
             yield Article(content=extracted_text, url=url, source=self.name, create_time=str(time.time()))
+            self.visited_urls.add(url_h)
